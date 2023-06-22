@@ -1,0 +1,110 @@
+[
+  {
+    "image": "BA-0919-Creamy-Pasta-Crispy-Mushroom-Playbook.jpg",
+    "type": "VEGETARIAN",
+    "name": "Creamy Mushroom Pasta",
+    "calories": 550,
+    "nutriScore": 82,
+    "rating": 4.7,
+    "reviews": 421
+  },
+  {
+    "image": "Spicy-black-bean-burritos-10-650x433.jpg",
+    "type": "VEGAN",
+    "name": "Spicy Veggie Burrito",
+    "calories": 450,
+    "nutriScore": 90,
+    "rating": 4.5,
+    "reviews": 309
+  },
+  {
+    "image": "aqIMG_4206fh-1be500db714c45dc8d083d8c848e65d0.jpg",
+    "type": "VEGAN",
+    "name": "Mediterranean Salad",
+    "calories": 300,
+    "nutriScore": 95,
+    "rating": 4.8,
+    "reviews": 623
+  },
+  {
+    "image": "https://example.com/steak.jpg",
+    "type": "MEAT",
+    "name": "Grilled Steak",
+    "calories": 800,
+    "nutriScore": 60,
+    "rating": 4.5,
+    "reviews": 462
+  },
+  {
+    "image": "https://example.com/sushi.jpg",
+    "type": "SEAFOOD",
+    "name": "Sushi Platter",
+    "calories": 500,
+    "nutriScore": 75,
+    "rating": 4.8,
+    "reviews": 735
+  },
+  {
+    "image": "https://example.com/chicken_curry.jpg",
+    "type": "POULTRY",
+    "name": "Chicken Curry",
+    "calories": 600,
+    "nutriScore": 70,
+    "rating": 4.6,
+    "reviews": 598
+  },
+  {
+    "image": "https://example.com/burger.jpg",
+    "type": "FAST FOOD",
+    "name": "Classic Cheeseburger",
+    "calories": 700,
+    "nutriScore": 50,
+    "rating": 4.3,
+    "reviews": 854
+  },
+  {
+    "image": "https://example.com/pork_chop.jpg",
+    "type": "MEAT",
+    "name": "Grilled Pork Chop",
+    "calories": 550,
+    "nutriScore": 65,
+    "rating": 4.4,
+    "reviews": 376
+  },
+  {
+    "image": "https://example.com/soup.jpg",
+    "type": "VEGAN",
+    "name": "Roasted Tomato Soup",
+    "calories": 250,
+    "nutriScore": 96,
+    "rating": 4.9,
+    "reviews": 812
+  },
+  {
+    "image": "https://example.com/sandwich.jpg",
+    "type": "VEGETARIAN",
+    "name": "Caprese Sandwich",
+    "calories": 500,
+    "nutriScore": 78,
+    "rating": 4.4,
+    "reviews": 381
+  },
+  {
+    "image": "https://example.com/bowl.jpg",
+    "type": "VEGETARIAN",
+    "name": "Quinoa Buddha Bowl",
+    "calories": 450,
+    "nutriScore": 85,
+    "rating": 4.7,
+    "reviews": 512
+  },
+  {
+    "image": "https://example.com/tacos.jpg",
+    "type": "VEGAN",
+    "name": "Black Bean Tacos",
+    "calories": 400,
+    "nutriScore": 91,
+    "rating": 4.6,
+    "reviews": 389
+  }
+]

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OmniFood</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/queries.css') }}" />
+
+    <script
+      type="module"
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"
+    ></script>
+    <script
+      nomodule
+      src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"
+    ></script>
+    <style>
+        .meal{
+            margin-top: 3rem !important;
+        }
+    </style>
+
+  </head>
+  <body>
+    <header class="header">
+      <a href="{{ url_for('home') }}">
+        <img
+          class="logo"
+          alt="Omnifood logo"
+          src="/static/img/omnifood-logo.png"
+        />
+      </a>
+      <nav class="main-nav">
+        <ul class="main-nav-list">
+
+          <a
+            class="main-nav-link nav-cta"
+            aria-current="page"
+            href="{{ url_for('logout') }}"
+            >Log out</a
+          >
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container grid grid--3-cols margin-bottom-md">
+        {% for meal in meals %}
+        <div class="meal">
+          <img
+            src="{{ url_for('static', filename='img/meals/' + meal.image) }}"
+            class="meal-img"
+            alt="{{ meal.name }}"
+          />
+          <div class="meal-content">
+            <div class="meal-tags">
+              <span class="tag tag--vegetarian">{{ meal.type }}</span>
+            </div>
+            <p class="meal-title">{{ meal.name }}</p>
+            <ul class="meal-attributes">
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="flame-outline"></ion-icon
+                ><span><strong>{{ meal.calories }}</strong> calories</span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon
+                  class="meal-icon"
+                  name="restaurant-outline"
+                ></ion-icon>
+                <span> NutriScore &reg; <strong>{{ meal.nutriScore }}</strong></span>
+              </li>
+              <li class="meal-attribute">
+                <ion-icon class="meal-icon" name="star-outline"></ion-icon
+                ><span><strong>{{ meal.rating }}</strong> rating ({{ meal.reviews }})</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+  </body>
+</html>
