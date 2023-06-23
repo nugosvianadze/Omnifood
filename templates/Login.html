@@ -83,6 +83,12 @@
       button[type="submit"]:hover {
         background-color: #e67e22;
       }
+
+      .error-message {
+        color: red;
+        font-size: 1.4rem;
+        margin-top: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -113,6 +119,7 @@
     </header>
     <div class="container">
       <form method="POST" action="{{ url_for('login') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" required />
@@ -122,17 +129,12 @@
           <input type="password" id="password" name="password" required />
         </div>
         <button type="submit">Login</button>
+          {% if error is not false %}
+        <div class="error-message" id="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
       </form>
     </div>
   </body>
 </html>
-
-
-
-
-
-
-
-
-
-

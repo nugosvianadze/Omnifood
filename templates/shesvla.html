@@ -83,6 +83,12 @@
       button[type="submit"]:hover {
         background-color: #e67e22;
       }
+
+      .error-message {
+        color: red;
+        font-size: 1.4rem;
+        margin-top: 0.5rem;
+      }
     </style>
   </head>
   <body>
@@ -96,26 +102,27 @@
       </a>
       <nav class="mainheader1">
         <ul class="hederi1">
-            {% if not current_user.is_authenticated %}
+          {% if not current_user.is_authenticated %}
           <a
             class="main-nav-link"
             aria-current="page"
             href="{{ url_for('login') }}"
             >შესვლა</a
-            >
-            {% endif %}
-            <a
+          >
+          {% endif %}
+          <a
             class="main-nav-link"
             aria-current="page"
             href="{{ url_for('home') }}"
             >მთავარი</a
-            >
+          >
         </ul>
       </nav>
     </header>
 
     <div class="container">
       <form method="POST" action="{{ url_for('register') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
         <div class="form-group">
           <label for="email">Email</label>
           <input type="email" id="email" name="email" required />
@@ -129,6 +136,11 @@
           <input type="password" id="password" name="password" required />
         </div>
         <button type="submit">Registration</button>
+          {% if error %}
+        <div class="error-message" id="error-message">
+            {{ error }}
+        </div>
+        {% endif %}
       </form>
     </div>
   </body>

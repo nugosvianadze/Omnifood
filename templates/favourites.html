@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block body %}
+    <h1 style="margin-left: 45%; margin-top: 2%;">All Favorite Meal</h1>
     <div class="container grid grid--3-cols margin-bottom-md">
         {% for meal in meals %}
         <div class="meal">
@@ -30,18 +31,8 @@
                 ><span><strong>{{ meal.rating }}</strong> rating ({{ meal.reviews }})</span>
               </li>
                 <li class="meal-attribute">
-                    {% if not meal.is_favorited %}
-                <form class="favorite-form" action="{{ url_for('add_to_fav', meal_id=meal.id) }}" method="POST">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <button style="background-color: transparent; border: none;" type="submit"><ion-icon name="bookmark-outline" class="favorite"></ion-icon></button><span class="favorite-span">
-                    Add to favorites
-                </span>
-                </form>
-                    {% else %}
-                    <ion-icon name="bookmark" class="favorite"></ion-icon><span class="favorite-span">
-                    Already in favorites
-                </span>
-                    {% endif %}
+                    <a href="{{ url_for('delete_favorite', meal_id=meal.id) }}" class="btn btn--primary btn--inside uppercase">Delete</a>
+                </li>
               </li>
             </ul>
           </div>

@@ -1,51 +1,16 @@
 import json
-import os
 
-import requests
-from PIL import Image
+from flask import render_template, redirect, url_for, request
+from flask_login import login_required
+from flask_login import current_user, login_user, logout_user
 
-from flask import Flask, render_template, redirect, url_for, request
-from flask_login import UserMixin
-from flask_login import LoginManager, current_user, login_user, logout_user
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-
-app = Flask(__name__)
-
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///site.sqlite3'
-app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
-
-login_manager = LoginManager()
-# Added this line fixed the issue.
-login_manager.init_app(app)
-login_manager.login_view = 'users.login'
+from config import login_manager, app
+from models import User, FavMeal
 
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.get(user_id)
-
-
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(20))
-    username = db.Column(db.String(20), unique=True, nullable=False)
-    password = db.Column(db.String(20), nullable=False)
-
-    def __repr__(self):
-        return f"User('{self.username}', '{self.password}')"
-
-    def create_user(self):
-        db.session.add(self)
-        db.session.commit()
-        return self
-
-    @classmethod
-    def get(cls, user_id):
-        return cls.query.get(user_id)
 
 
 @app.route('/')
@@ -61,50 +26,20 @@ def register():
         username = request.form['username']
         password = request.form['password']
 
-        user_exists = User.query.filter_by(email=email).first()
+        user_exists = User.query.filter_by(email=email).first() or User.query.filter_by(username=username).first()
         print(user_exists)
         if user_exists:
-            return '<h1>User already exists</h1>'
+            error = 'User already exists with this email or username'
+            return render_template('shesvla.html', title='Login', error=error)
         else:
+            print('here')
             user = User(email=email, username=username, password=password)
             user.create_user()
             return redirect(url_for('login'))
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    return render_template('shesvla.html', title='Login')
-
-
-@app.route('/main', methods=['POST', 'GET'])
-def mtavari():
-    if not current_user.is_authenticated:
-        return redirect(url_for('login'))
-
-    # meals.json is a file that contains a list of meals
-    # meals.json is located in the same directory as main.py
-    meals_from_json = json.load(open('meals.json', 'r'))
-
-    # resize imaages to 700x467
-    # for meal in meals_from_json:
-    #     image_url = meal['image']
-    #     image_name = image_url.split('/')[-1]
-    #     save_path = os.path.join('static/img/meals', image_name)
-    #
-    #     # Download the image
-    #     response = requests.get(image_url)
-    #     response.raise_for_status()
-    #     # Save the image to the specified path
-    #     with open(save_path, 'wb') as f:
-    #         f.write(response.content)
-    #
-    #     # Open and resize the image
-    #     image = Image.open(save_path)
-    #     resized_image = image.resize((700, 467), Image.ANTIALIAS)
-    #
-    #     # Save the resized image to the same path
-    #     resized_image.save(save_path)
-
-
-    return render_template('main.html', title='Mtavari', meals=meals_from_json)
+    error = False
+    return render_template('shesvla.html', title='Login', error=error)
 
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -119,12 +54,65 @@ def login():
                 login_user(user_exists)
                 return redirect(url_for('mtavari'))
             else:
-                return '<h1>Password is incorrect</h1>'
+                error = 'Password is incorrect'
+                return render_template('Login.html', title='Login', error=error)
         else:
-            return '<h1>User does not exist</h1>'
+            error = 'User does not exist'
+            return render_template('Login.html', title='Login', error=error)
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    return render_template('Login.html', title='Login')
+    error = False
+    return render_template('Login.html', title='Login', error=error)
+
+
+@app.route('/main', methods=['GET'])
+@login_required
+def mtavari():
+    print(current_user.is_authenticated)
+    meals_from_json = json.load(open('meals.json', 'r'))
+    favorited_meals_from_db = FavMeal.query.filter_by(user_id=current_user.id).all()
+    for meals in meals_from_json:
+        for fav_meal in favorited_meals_from_db:
+            if meals['id'] == fav_meal.meal_id:
+                meals['is_favorited'] = True
+                break
+        else:
+            meals['is_favorited'] = False
+    return render_template('main.html', title='Mtavari', meals=meals_from_json)
+
+@app.route('/add-to-fav/<int:meal_id>', methods=['POST'])
+@login_required
+def add_to_fav(meal_id):
+
+    meal_exists_in_json = json.load(open('meals.json', 'r'))
+    meal_exists_in_json = [meal for meal in meal_exists_in_json if meal['id'] == meal_id]
+    if not meal_exists_in_json:
+        return '<h1>Meal does not exist</h1>'
+
+    meal_already_favorited = FavMeal.query.filter_by(user_id=current_user.id, meal_id=meal_id).first()
+    if meal_already_favorited:
+        return '<h1>Meal already favorited</h1>'
+    fav_meal = FavMeal(user_id=current_user.id, meal_id=meal_id)
+    fav_meal.create()
+    return redirect(url_for('fav_meals'))
+
+
+@app.route('/fav-meals')
+@login_required
+def fav_meals():
+    fav_meals = FavMeal.query.filter_by(user_id=current_user.id).all()
+    meals_from_json = json.load(open('meals.json', 'r'))
+    fav_meals = [meal for meal in meals_from_json if meal['id'] in [fav_meal.meal_id for fav_meal in fav_meals]]
+
+    return render_template('favourites.html', title='Fav Meals', meals=fav_meals)
+
+@app.route('/delete_favorite/<int:meal_id>')
+def delete_favorite(meal_id):
+    fav_meal = FavMeal.query.filter_by(user_id=current_user.id, meal_id=meal_id).first()
+    if not fav_meal:
+        return '<h1>Meal does not exist in favorites</h1>'
+    fav_meal.delete()
+    return redirect(url_for('fav_meals'))
 
 
 @app.route('/logout')
