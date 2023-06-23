@@ -30,7 +30,7 @@
                 ><span><strong>{{ meal.rating }}</strong> rating ({{ meal.reviews }})</span>
               </li>
                 <li class="meal-attribute">
-                    {% if not meal.is_favorited %}
+                    {% if not meal.is_favorited and current_user.is_authenticated %}
                 <form class="favorite-form" action="{{ url_for('add_to_fav', meal_id=meal.id) }}" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <button style="background-color: transparent; border: none;" type="submit"><ion-icon name="bookmark-outline" class="favorite"></ion-icon></button><span class="favorite-span">

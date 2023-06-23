@@ -50,6 +50,12 @@
           <a class="main-nav-link" href="#meals">Meals</a>
           <a class="main-nav-link" href="#testimonials">Testimonials</a>
           <a class="main-nav-link" href="">Pricing</a> -->
+        <a
+                class="main-nav-link nav-cta"
+                aria-current="page"
+                href="{{ url_for('mtavari') }}"
+                >Meals</a
+              >
             {% if current_user.is_authenticated %}
                 <a
                 class="main-nav-link nav-cta"
